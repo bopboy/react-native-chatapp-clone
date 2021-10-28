@@ -6,7 +6,7 @@ import Navigation from './navigations'
 import AppLoading from 'expo-app-loading'
 
 const App = () => {
-  const [isReady, setIsReady] = useState(false)
+  const [isReady, setIsReady] = useState(true)
   return isReady ? (
     <ThemeProvider theme={theme}>
       <StatusBar backgroundColor={theme.background} barStyle="dark-content" />
