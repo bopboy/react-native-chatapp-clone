@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { ThemeContext } from 'styled-components/native'
 import styled from 'styled-components'
-import { Button } from '../components'
+import { Button, Image } from '../components'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const Container = styled.View`
@@ -19,8 +19,10 @@ const StyledText = styled.Text`
 const Signin = ({ navigation }) => {
     const insets = useSafeAreaInsets()
     const theme = useContext(ThemeContext)
+    const logoUrl = 'https://firebasestorage.googleapis.com/v0/b/rn-chat-app-7368c.appspot.com/o/logo.png?alt=media'
     return (
         <Container insets={insets}>
+            <Image url={logoUrl} />
             <StyledText>SIGN-IN</StyledText>
             <Button title="Signup" onPress={() => console.log('signin')} />
             <Button

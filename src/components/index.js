@@ -1,2 +1,3 @@
 import Button from './Button'
-export { Button }
+import Image from './Image'
+export { Button, Image }
