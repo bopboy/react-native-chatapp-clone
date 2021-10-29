@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 const Container = styled.View`
     background-color: ${({ theme }) => theme.btnBackground};
     padding:10px;
-    margin:10px;
+    margin:10px 0 ;
     flex:1;
     justify-content: center;
     align-items: center;
