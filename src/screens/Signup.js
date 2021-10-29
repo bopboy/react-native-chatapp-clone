@@ -10,8 +10,7 @@ const Container = styled.View`
     background-color: ${({ theme }) => theme.background};
     padding:50px 20px;
 `
-const logoUrl = 'https://firebasestorage.googleapis.com/v0/b/rn-chat-app-7368c.appspot.com/o/logo.png?alt=media'
-
+const DEFAULT_PHOTO = 'https://firebasestorage.googleapis.com/v0/b/rn-chat-app-7368c.appspot.com/o/face.png?alt=media'
 const Signup = () => {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
@@ -20,14 +19,15 @@ const Signup = () => {
     const refEmail = useRef(null)
     const refPassword = useRef(null)
     const refPasswordConfirm = useRef(null)
+    const [photo, setPhoto] = useState(DEFAULT_PHOTO)
     const _handleSignupBtnPress = () => {
         console.log('singup')
     }
     return (
         <KeyboardAwareScrollView extraScrollHeight={20}>
             <Container>
-                <Image />
-                <Input label="Name" placeholder="Name" returnKeyType="next" value={name} onChangeText={setName}
+                <Image showButton={true} url={photo} onChangePhoto={setPhoto} />
+                < Input label="Name" placeholder="Name" returnKeyType="next" value={name} onChangeText={setName}
                     onSubmitEditing={() => refEmail.current.focus()}
                 />
                 <Input ref={refEmail} label="Email" placeholder="Email" returnKeyType="next" value={email} onChangeText={setEmail}
@@ -45,8 +45,5 @@ const Signup = () => {
             </Container >
         </KeyboardAwareScrollView>
     )
-}
-Image.defaultProps = {
-    url: 'https://firebasestorage.googleapis.com/v0/b/rn-chat-app-7368c.appspot.com/o/face.png?alt=media'
 }
 export default Signup
