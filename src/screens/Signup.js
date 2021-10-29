@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import { Button, Image, Input, ErrorMessage } from '../components'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { signup } from '../firebase'
 import { Alert } from 'react-native'
 import { validateEmail, removeWhitespace } from '../utils'
+import { UserContext, ProgressContext } from '../contexts'
 
 const Container = styled.View`
     flex:1;
@@ -15,6 +16,8 @@ const Container = styled.View`
 `
 const DEFAULT_PHOTO = 'https://firebasestorage.googleapis.com/v0/b/rn-chat-app-7368c.appspot.com/o/face.png?alt=media'
 const Signup = ({ navigation }) => {
+    const { setUser } = useContext(UserContext)
+    const { spinner } = useContext(ProgressContext)
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -28,10 +31,13 @@ const Signup = ({ navigation }) => {
     const refDidMount = useRef(null)
     const _handleSignupBtnPress = async () => {
         try {
+            spinner.start()
             const user = await signup({ name, email, password, photo })
-            navigation.navigate('Profile', { user })
+            setUser(user)
         } catch (e) {
             Alert.alert('Sign up Error', e.message)
+        } finally {
+            spinner.stop()
         }
     }
     useEffect(() => {
@@ -61,17 +67,17 @@ const Signup = ({ navigation }) => {
                 />
                 <Input ref={refEmail} label="Email" placeholder="Email" returnKeyType="next" value={email} onChangeText={setEmail}
                     onSubmitEditing={() => refPassword.current.focus()}
-                // onBlur={() => setEmail(removeWhitespace(email))}
+                    onBlur={() => setEmail(removeWhitespace(email))}
                 />
                 <Input ref={refPassword}
                     label="Password" placeholder="Password" returnKeyType="next" value={password} onChangeText={setPassword}
                     isPassword={true} onSubmitEditing={() => refPasswordConfirm.current.focus()}
-                // onBlur={() => setPassword(removeWhitespace(password))}
+                    onBlur={() => setPassword(removeWhitespace(password))}
                 />
                 <Input ref={refPasswordConfirm}
                     label="PasswordConfirm" placeholder="PasswordConfirm" returnKeyType="done" value={passwordConfirm} onChangeText={setPasswordConfirm}
                     isPassword={true} onSubmitEditing={_handleSignupBtnPress}
-                // onBlur={() => setPasswordConfirm(removeWhitespace(passwordConfirm))}
+                    onBlur={() => setPasswordConfirm(removeWhitespace(passwordConfirm))}
                 />
                 <ErrorMessage message={errorMessage} />
                 <Button title="Sign up" onPress={_handleSignupBtnPress} disabled={disabled} />

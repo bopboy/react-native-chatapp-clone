@@ -24,7 +24,6 @@ const Auth = () => {
                     />
                 )
             }} />
-            <Stack.Screen name="Profile" component={Profile} />
         </Stack.Navigator>
     )
 }

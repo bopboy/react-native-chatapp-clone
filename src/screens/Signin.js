@@ -7,6 +7,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { signin } from '../firebase'
 import { Alert } from 'react-native'
 import { validateEmail, removeWhitespace } from '../utils'
+import { UserContext, ProgressContext } from '../contexts'
 
 const Container = styled.View`
     flex:1;
@@ -21,6 +22,8 @@ const logoUrl = 'https://firebasestorage.googleapis.com/v0/b/rn-chat-app-7368c.a
 const Signin = ({ navigation }) => {
     const insets = useSafeAreaInsets()
     const theme = useContext(ThemeContext)
+    const { setUser } = useContext(UserContext)
+    const { spinner } = useContext(ProgressContext)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [errorMessage, setErrorMessage] = useState('')
@@ -28,10 +31,13 @@ const Signin = ({ navigation }) => {
     const refPassword = useRef(null)
     const _handleSigninBtnPress = async () => {
         try {
+            spinner.start()
             const user = await signin({ email, password })
-            navigation.navigate('Profile', { user })
+            setUser(user)
         } catch (e) {
             Alert.alert('Sign in Error', e.message)
+        } finally {
+            spinner.stop()
         }
     }
     const _handleEmailChange = email => {
