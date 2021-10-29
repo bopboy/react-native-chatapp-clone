@@ -10,6 +10,7 @@ const Colors = {
 export const theme = {
     background: Colors.white,
     text: Colors.black,
+    errorText: Colors.red,
 
     // Button
     btnBackground: Colors.main,

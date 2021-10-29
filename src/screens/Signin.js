@@ -1,9 +1,12 @@
-import React, { useContext, useState, useRef } from 'react'
+import React, { useContext, useState, useRef, useEffect } from 'react'
 import { ThemeContext } from 'styled-components/native'
 import styled from 'styled-components'
-import { Button, Image, Input } from '../components'
+import { Button, Image, Input, ErrorMessage } from '../components'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { signin } from '../firebase'
+import { Alert } from 'react-native'
+import { validateEmail, removeWhitespace } from '../utils'
 
 const Container = styled.View`
     flex:1;
@@ -20,22 +23,41 @@ const Signin = ({ navigation }) => {
     const theme = useContext(ThemeContext)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [errorMessage, setErrorMessage] = useState('')
+    const [disabled, setDisabled] = useState(true)
     const refPassword = useRef(null)
-    const _handleSigninBtnPress = () => {
-        console.log('singin')
+    const _handleSigninBtnPress = async () => {
+        try {
+            const user = await signin({ email, password })
+            navigation.navigate('Profile', { user })
+        } catch (e) {
+            Alert.alert('Sign in Error', e.message)
+        }
     }
+    const _handleEmailChange = email => {
+        const changedEmail = removeWhitespace(email)
+        setEmail(changedEmail)
+        setErrorMessage(validateEmail(changedEmail) ? '' : '이메일을 확인해주세요')
+    }
+    const _handlePasswordChange = password => {
+        setPassword(removeWhitespace(password))
+    }
+    useEffect(() => {
+        setDisabled(!(email && password && !errorMessage))
+    }, [email, password, errorMessage])
     return (
         <KeyboardAwareScrollView extraScrollHeight={20} contentContainerStyle={{ flex: 1 }}>
             <Container insets={insets}>
                 <Image url={logoUrl} />
                 <Input onSubmitEditing={() => refPassword.current.focus()}
-                    label="Email" placeholder="Email" returnKeyType="next" value={email} onChangeText={setEmail}
+                    label="Email" placeholder="Email" returnKeyType="next" value={email} onChangeText={_handleEmailChange}
                 />
                 <Input ref={refPassword}
-                    label="Password" placeholder="Password" returnKeyType="done" value={password} onChangeText={setPassword}
+                    label="Password" placeholder="Password" returnKeyType="done" value={password} onChangeText={_handlePasswordChange}
                     isPassword={true} onSubmitEditing={_handleSigninBtnPress}
                 />
-                <Button title="Sign in" onPress={_handleSigninBtnPress} />
+                <ErrorMessage message={errorMessage} />
+                <Button title="Sign in" onPress={_handleSigninBtnPress} disabled={disabled} />
                 <Button
                     title="or Sign up"
                     onPress={() => navigation.navigate('Signup')}
