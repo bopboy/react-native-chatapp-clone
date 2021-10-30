@@ -13,7 +13,7 @@ const ChannelCreation = ({ navigation }) => {
     return (
         <Container>
             <StyledText>Channel Creation</StyledText>
-            <Button title="ChannelCreate" onPress={() => navigation.replace('Channel')} />
+            <Button title="Channel Create" onPress={() => navigation.replace('Channel')} />
         </Container>
     )
 }

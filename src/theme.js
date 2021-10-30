@@ -30,5 +30,9 @@ export const theme = {
 
     // spinner
     spinnerBackground: Colors.black,
-    spinnerIndicator: Colors.white
+    spinnerIndicator: Colors.white,
+
+    // Tab
+    tabBtnActive: Colors.main,
+    tabBtnInactive: Colors.grey_1
 }
