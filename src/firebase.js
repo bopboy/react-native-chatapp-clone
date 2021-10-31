@@ -1,11 +1,13 @@
 import { initializeApp } from 'firebase/app'
 import config from '../firebase.json'
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { getStorage, ref, uploadBytes, getDownloadURL, signOut } from 'firebase/storage'
+import { getFirestore, collection, addDoc } from 'firebase/firestore'
 
 const app = initializeApp(config)
 const auth = getAuth()
 const storage = getStorage(app)
+const db = getFirestore()
 
 export const signin = async ({ email, password }) => {
     const { user } = await signInWithEmailAndPassword(auth, email, password)
@@ -25,7 +27,6 @@ const uploadImage = async uri => {
     const user = auth.currentUser
     const imageRef = ref(storage, `/profile/${user.uid}/photo.png`)
     const snapshot = await uploadBytes(imageRef, blob, { contentType: 'image/png' })
-    console.log(snapshot)
     blob.close()
     return await getDownloadURL(snapshot.ref)
 }
@@ -42,9 +43,16 @@ export const getCurrentUser = () => {
 export const updateUserInfo = async photo => {
     const photoURL = await uploadImage(photo)
     await updateProfile(auth.currentUser, { photoURL })
+    console.log(auth.currentUser)
     return photoURL
 }
 export const signout = async () => {
     await signOut(auth)
     return {}
+}
+export const createChannel = async ({ title, desc }) => {
+    const newChannel = await addDoc(collection(db, '/channels'), {
+        title, description: desc, createdAt: Date.now()
+    })
+    return newChannel.id
 }
