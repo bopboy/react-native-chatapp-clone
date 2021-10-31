@@ -7,7 +7,7 @@ import { getFirestore, collection, addDoc } from 'firebase/firestore'
 const app = initializeApp(config)
 const auth = getAuth()
 const storage = getStorage(app)
-const db = getFirestore()
+export const db = getFirestore()
 
 export const signin = async ({ email, password }) => {
     const { user } = await signInWithEmailAndPassword(auth, email, password)

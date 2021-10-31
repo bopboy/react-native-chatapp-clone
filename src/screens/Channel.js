@@ -8,10 +8,12 @@ const Container = styled.View`
 const StyledText = styled.Text`
     font-size:30px;
 `
-const Channel = () => {
+const Channel = ({ route }) => {
     return (
         <Container>
             <StyledText>Channels</StyledText>
+            <StyledText>{route.params.id}</StyledText>
+            <StyledText>{route.params.title}</StyledText>
         </Container>
     )
 }
